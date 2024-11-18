@@ -1,11 +1,11 @@
-from auth import validate_auth, AuthorizationError
+from server.auth import validate_auth, AuthorizationError
 from flask import Flask, jsonify, request
-from database import Databases, BookmarkError
+from server.database import Databases, BookmarkError
 
 
+# noinspection SpellCheckingInspection
 class Config:
     HOSTNAME = "biskuvibookmark.pythonanywhere.com"
-    # noinspection SpellCheckingInspection
     SERVICE_DID = f"did:plc:qvmvynssslo5yhstrnc2cwv6"
     BOOKMARKS_URI = f"at://{SERVICE_DID}/app.bsky.feed.generator/bookmarks"
 
