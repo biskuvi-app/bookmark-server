@@ -72,13 +72,12 @@ def is_bookmarked():
         return "Bad Request", 400
     try:
         did = validate_auth(request)
-        databases.repo_bookmarks(did).is_bookmarked(uri)
+        is_bmed = databases.repo_bookmarks(did).is_bookmarked(uri)
+        return jsonify({'success': True, "is_bookmarked": is_bmed})
     except AuthorizationError:
         return 'Unauthorized', 401
     except BookmarkError:
-        return 'Unauthorized', 405
-
-    return jsonify({'success': True, })
+        return 'Bookmark error', 500
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.addBookmark', methods=['GET'])
@@ -86,7 +85,14 @@ def add_bookmark():
     uri = request.args.get('uri', default=None, type=str)
     if uri is None:
         return "Bad Request", 400
-    return jsonify({'success': True})
+    try:
+        did = validate_auth(request)
+        databases.repo_bookmarks(did).add_bookmark(uri)
+        return jsonify({'success': True})
+    except AuthorizationError:
+        return 'Unauthorized', 401
+    except BookmarkError:
+        return 'Bookmark error', 500
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.removeBookmark', methods=['GET'])
@@ -94,4 +100,11 @@ def remove_bookmark():
     uri = request.args.get('uri', default=None, type=str)
     if uri is None:
         return "Bad Request", 400
-    return jsonify({'success': True})
+    try:
+        did = validate_auth(request)
+        databases.repo_bookmarks(did).remove_bookmark(uri)
+        return jsonify({'success': True})
+    except AuthorizationError:
+        return 'Unauthorized', 401
+    except BookmarkError:
+        return 'Bookmark error', 500
