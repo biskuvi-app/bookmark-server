@@ -41,6 +41,12 @@ Endpoints:
 - /xrpc/app.bsky.feed.describeFeedGenerator
 - /xrpc/app.bsky.feed.getFeedSkeleton
 
+Custom endpoints:  
+
+- /xrpc/app.biskuvi.bookmark.isBookmarked  
+- /xrpc/app.biskuvi.bookmark.addBookmark  
+- /xrpc/app.biskuvi.bookmark.removeBookmark  
+
 ### License
 
 MIT
