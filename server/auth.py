@@ -1,5 +1,4 @@
-import atproto
-from atproto import DidInMemoryCache, IdResolver, verify_jwt
+from atproto import DidInMemoryCache, IdResolver, parse_jwt, decode_jwt_payload, validate_jwt_payload
 from atproto.exceptions import TokenInvalidSignatureError
 from flask import Request
 
@@ -8,6 +7,10 @@ _ID_RESOLVER = IdResolver(cache=_CACHE)
 
 
 class AuthorizationError(Exception):
+    ...
+
+
+class TokenDecodeError(Exception):
     ...
 
 
@@ -22,8 +25,15 @@ def validate_auth(request: 'Request') -> str:
     jwt = auth_header[len('Bearer '):].strip()
 
     try:
-        return verify_jwt(jwt, _ID_RESOLVER.did.resolve_atproto_key).iss
-        # payload = atproto.decode_jwt_payload(jwt)
-        # return payload
+        plain_payload, signing_input, _, signature = parse_jwt(jwt)
+
+        payload = decode_jwt_payload(plain_payload)
+        validate_jwt_payload(payload)
+
+        if payload.iss is None:
+            raise TokenDecodeError('Invalid payload. Expected not None iss')
+
+        return payload.iss
+
     except TokenInvalidSignatureError as e:
         raise AuthorizationError('Invalid signature') from e
