@@ -54,10 +54,10 @@ def describe_feed_generator():
 def get_feed_skeleton():
     feed = request.args.get('feed', default=None, type=str)
 
-    try:
-        requester_did = validate_auth(request)
-    except AuthorizationError:
-        return 'Unauthorized', 401
+    # try:
+    #     requester_did = validate_auth(request)
+    # except AuthorizationError:
+    #     return 'Unauthorized', 401
 
     try:
         cursor = request.args.get('cursor', default=None, type=str)
