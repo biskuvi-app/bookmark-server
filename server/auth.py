@@ -3,7 +3,7 @@ from atproto.exceptions import TokenInvalidSignatureError
 from flask import Request
 
 _CACHE = DidInMemoryCache()
-_ID_RESOLVER = IdResolver(cache=_CACHE)
+_ID_RESOLVER = IdResolver(cache=_CACHE).did.resolve_atproto_key
 
 
 class AuthorizationError(Exception):

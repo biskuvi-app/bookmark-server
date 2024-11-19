@@ -41,12 +41,11 @@ def did_json():
 
 @app.route('/xrpc/app.bsky.feed.describeFeedGenerator', methods=['GET'])
 def describe_feed_generator():
-    feeds = [{'uri': uri} for uri in {}]
     response = {
         'encoding': 'application/json',
         'body': {
             'did': Config.SERVICE_DID,
-            'feeds': feeds
+            'feeds': [{'uri': Config.BOOKMARKS_URI}]
         }
     }
     return jsonify(response)
@@ -54,64 +53,79 @@ def describe_feed_generator():
 
 @app.route('/xrpc/app.bsky.feed.getFeedSkeleton', methods=['GET'])
 def get_feed_skeleton():
-    feed = request.args.get('feed', default=None, type=str)
-
+    did: str
     try:
-        requester_did = validate_auth(request)
-        logging.info(requester_did)
-
+        did = validate_auth(request)
     except AuthorizationError:
         return 'Unauthorized', 401
 
+    cursor: str
+    limit: int
     try:
         cursor = request.args.get('cursor', default=None, type=str)
         limit = request.args.get('limit', default=20, type=int)
     except ValueError:
         return 'Malformed cursor', 400
 
-    return jsonify(["at://did:plc:qvmvynssslo5yhstrnc2cwv6/post/3l7w3ip3nw72s"])
+    return jsonify(databases.get_bookmarks(did, cursor, limit))
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.isBookmarked', methods=['GET'])
 def is_bookmarked():
+    did: str
+    try:
+        did = validate_auth(request)
+    except AuthorizationError:
+        return 'Unauthorized', 401
+
     uri = request.args.get('uri', default=None, type=str)
     if uri is None:
         return "Bad Request", 400
+
+    is_bmed: bool
     try:
-        did = validate_auth(request)
-        is_bmed = databases.repo_bookmarks(did).is_bookmarked(uri)
-        return jsonify({'success': True, "is_bookmarked": is_bmed})
-    except AuthorizationError:
-        return 'Unauthorized', 401
+        is_bmed = databases.is_bookmarked(did, uri)
     except BookmarkError:
         return 'Bookmark error', 500
+
+    return jsonify({'success': True, "is_bookmarked": is_bmed})
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.addBookmark', methods=['GET'])
 def add_bookmark():
+    did: str
+    try:
+        did = validate_auth(request)
+    except AuthorizationError:
+        return 'Unauthorized', 401
+
     uri = request.args.get('uri', default=None, type=str)
     if uri is None:
         return "Bad Request", 400
+
     try:
-        did = validate_auth(request)
-        databases.repo_bookmarks(did).add_bookmark(uri)
-        return jsonify({'success': True})
-    except AuthorizationError:
-        return 'Unauthorized', 401
+        databases.add_bookmark(did, uri)
     except BookmarkError:
         return 'Bookmark error', 500
+
+    return jsonify({'success': True})
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.removeBookmark', methods=['GET'])
 def remove_bookmark():
+    did: str
+    try:
+        did = validate_auth(request)
+    except AuthorizationError:
+        return 'Unauthorized', 401
+
     uri = request.args.get('uri', default=None, type=str)
     if uri is None:
         return "Bad Request", 400
+
     try:
-        did = validate_auth(request)
-        databases.repo_bookmarks(did).remove_bookmark(uri)
-        return jsonify({'success': True})
-    except AuthorizationError:
-        return 'Unauthorized', 401
+        databases.remove_bookmark(did, uri)
     except BookmarkError:
         return 'Bookmark error', 500
+
+    return jsonify({'success': True})
