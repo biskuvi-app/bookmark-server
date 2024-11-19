@@ -1,3 +1,5 @@
+from flask_cors import CORS
+
 from server.auth import validate_auth, AuthorizationError
 from flask import Flask, jsonify, request
 from server.database import Databases, BookmarkError
@@ -11,6 +13,7 @@ class Config:
 
 
 app = Flask(__name__)
+CORS(app)
 databases = Databases()
 
 
