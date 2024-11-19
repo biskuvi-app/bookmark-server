@@ -1,3 +1,5 @@
+import logging
+
 from flask_cors import CORS
 
 from server.auth import validate_auth, AuthorizationError
@@ -54,10 +56,12 @@ def describe_feed_generator():
 def get_feed_skeleton():
     feed = request.args.get('feed', default=None, type=str)
 
-    # try:
-    #     requester_did = validate_auth(request)
-    # except AuthorizationError:
-    #     return 'Unauthorized', 401
+    try:
+        requester_did = validate_auth(request)
+        logging.info(requester_did)
+
+    except AuthorizationError:
+        return 'Unauthorized', 401
 
     try:
         cursor = request.args.get('cursor', default=None, type=str)
@@ -65,7 +69,7 @@ def get_feed_skeleton():
     except ValueError:
         return 'Malformed cursor', 400
 
-    return jsonify({})
+    return jsonify(["at://did:plc:qvmvynssslo5yhstrnc2cwv6/post/3l7w3ip3nw72s"])
 
 
 @app.route('/xrpc/app.biskuvi.bookmark.isBookmarked', methods=['GET'])
