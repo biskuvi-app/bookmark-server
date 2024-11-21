@@ -56,7 +56,8 @@ def get_feed_skeleton():
     did: str
     try:
         did = validate_auth(request)
-    except AuthorizationError:
+    except AuthorizationError as e:
+        logging.error(e)
         return 'Unauthorized', 401
 
     cursor: str
