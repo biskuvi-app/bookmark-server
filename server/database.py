@@ -49,7 +49,7 @@ class BookmarkRepository:
         except sqlite3.Error as e:
             raise BookmarkError(f"Failed to remove bookmark: {e}")
 
-    def get_bookmarks(self, cursor: Optional[str] = None, limit: int = 50) -> Dict:
+    def get_bookmarks(self, cursor: str | None = None, limit: int = 50) -> dict:
         if limit > 100:
             limit = 100
 

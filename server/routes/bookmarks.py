@@ -19,7 +19,8 @@ def get_feed_skeleton():
     try:
         cursor = request.args.get('cursor', default=None, type=str)
         limit = request.args.get('limit', default=20, type=int)
-    except ValueError:
+    except ValueError as e:
+        logging.error(e)
         return 'Malformed cursor', 400
 
     return jsonify(bookmark_manager.get_bookmarks(did, cursor, limit))
@@ -29,7 +30,8 @@ def get_feed_skeleton():
 def is_bookmarked():
     try:
         did = auth_service.validate_auth(request)
-    except AuthorizationError:
+    except AuthorizationError as e:
+        logging.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -39,7 +41,8 @@ def is_bookmarked():
     try:
         is_bmed = bookmark_manager.is_bookmarked(did, uri)
         return jsonify({'success': True, "is_bookmarked": is_bmed})
-    except BookmarkError:
+    except BookmarkError as e:
+        logging.error(e)
         return 'Bookmark error', 500
 
 
@@ -47,7 +50,8 @@ def is_bookmarked():
 def add_bookmark():
     try:
         did = auth_service.validate_auth(request)
-    except AuthorizationError:
+    except AuthorizationError as e:
+        logging.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -57,7 +61,8 @@ def add_bookmark():
     try:
         bookmark_manager.add_bookmark(did, uri)
         return jsonify({'success': True})
-    except BookmarkError:
+    except BookmarkError as e:
+        logging.error(e)
         return 'Bookmark error', 500
 
 
@@ -65,7 +70,8 @@ def add_bookmark():
 def remove_bookmark():
     try:
         did = auth_service.validate_auth(request)
-    except AuthorizationError:
+    except AuthorizationError as e:
+        logging.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -75,5 +81,6 @@ def remove_bookmark():
     try:
         bookmark_manager.remove_bookmark(did, uri)
         return jsonify({'success': True})
-    except BookmarkError:
+    except BookmarkError as e:
+        logging.error(e)
         return 'Bookmark error', 500
