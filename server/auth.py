@@ -1,39 +1,52 @@
-from atproto import DidInMemoryCache, IdResolver, parse_jwt, decode_jwt_payload, validate_jwt_payload
+from atproto import (
+    DidInMemoryCache,
+    IdResolver,
+    parse_jwt,
+    decode_jwt_payload,
+    validate_jwt_payload
+)
 from atproto.exceptions import TokenInvalidSignatureError
 from flask import Request
 
-_CACHE = DidInMemoryCache()
-_ID_RESOLVER = IdResolver(cache=_CACHE).did.resolve_atproto_key
-
 
 class AuthorizationError(Exception):
-    ...
+    pass
 
 
 class TokenDecodeError(Exception):
-    ...
+    pass
 
 
-def validate_auth(request: 'Request') -> str:
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        raise AuthorizationError('Authorization header is missing')
+class AuthService:
 
-    if not auth_header.startswith('Bearer '):
-        raise AuthorizationError('Invalid authorization header')
+    def __init__(self):
+        self._cache = DidInMemoryCache()
+        self._resolver = IdResolver(cache=self._cache).did.resolve_atproto_key
 
-    jwt = auth_header[len('Bearer '):].strip()
+    @staticmethod
+    def validate_auth(request: Request) -> str:
+        auth_header = request.headers.get('Authorization')
 
-    try:
-        plain_payload, signing_input, _, signature = parse_jwt(jwt)
+        if not auth_header:
+            raise AuthorizationError('Authorization header is missing')
 
-        payload = decode_jwt_payload(plain_payload)
-        validate_jwt_payload(payload)
+        if not auth_header.startswith('Bearer '):
+            raise AuthorizationError('Invalid authorization header')
 
-        if payload.iss is None:
-            raise TokenDecodeError('Invalid payload. Expected not None iss')
+        jwt = auth_header[len('Bearer '):].strip()
 
-        return payload.iss
+        try:
+            plain_payload, signing_input, *_, signature = parse_jwt(jwt)
+            payload = decode_jwt_payload(plain_payload)
+            validate_jwt_payload(payload)
 
-    except TokenInvalidSignatureError as e:
-        raise AuthorizationError('Invalid signature') from e
+            if payload.iss is None:
+                raise TokenDecodeError('Invalid payload. Expected non-None iss')
+
+            return payload.iss
+
+        except TokenInvalidSignatureError as e:
+            raise AuthorizationError('Invalid signature') from e
+
+
+auth_service = AuthService()
