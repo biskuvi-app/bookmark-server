@@ -1,29 +1,10 @@
-import logging
-
 from flask import Blueprint, jsonify, request
 
 from ..auth import auth_service, AuthorizationError
 from ..database import bookmark_manager, BookmarkError
+from ..logger import logger
 
 bookmarks_bp = Blueprint('bookmarks', __name__)
-
-
-@bookmarks_bp.route('/xrpc/app.bsky.feed.getFeedSkeleton', methods=['GET'])
-def get_feed_skeleton():
-    try:
-        did = auth_service.validate_auth(request)
-    except AuthorizationError as e:
-        logging.error(e)
-        return 'Unauthorized', 401
-
-    try:
-        cursor = request.args.get('cursor', default=None, type=str)
-        limit = request.args.get('limit', default=20, type=int)
-    except ValueError as e:
-        logging.error(e)
-        return 'Malformed cursor', 400
-
-    return jsonify(bookmark_manager.get_bookmarks(did, cursor, limit))
 
 
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.isBookmarked', methods=['GET'])
@@ -31,7 +12,7 @@ def is_bookmarked():
     try:
         did = auth_service.validate_auth(request)
     except AuthorizationError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -42,7 +23,7 @@ def is_bookmarked():
         is_bmed = bookmark_manager.is_bookmarked(did, uri)
         return jsonify({'success': True, "is_bookmarked": is_bmed})
     except BookmarkError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Bookmark error', 500
 
 
@@ -51,7 +32,7 @@ def add_bookmark():
     try:
         did = auth_service.validate_auth(request)
     except AuthorizationError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -62,7 +43,7 @@ def add_bookmark():
         bookmark_manager.add_bookmark(did, uri)
         return jsonify({'success': True})
     except BookmarkError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Bookmark error', 500
 
 
@@ -71,7 +52,7 @@ def remove_bookmark():
     try:
         did = auth_service.validate_auth(request)
     except AuthorizationError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Unauthorized', 401
 
     uri = request.args.get('uri', default=None, type=str)
@@ -82,5 +63,5 @@ def remove_bookmark():
         bookmark_manager.remove_bookmark(did, uri)
         return jsonify({'success': True})
     except BookmarkError as e:
-        logging.error(e)
+        logger.error(e)
         return 'Bookmark error', 500
