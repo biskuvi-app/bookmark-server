@@ -1,67 +1,60 @@
 from flask import Blueprint, jsonify, request
 
-from ..auth import auth_service, AuthorizationError
 from ..database import bookmark_manager, BookmarkError
-from ..logger import logger
+from ..util import get_did, get_uri
 
 bookmarks_bp = Blueprint('bookmarks', __name__)
 
 
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.isBookmarked', methods=['GET'])
 def is_bookmarked():
-    try:
-        did = auth_service.validate_auth(request)
-    except AuthorizationError as e:
-        logger.error(e)
-        return 'Unauthorized', 401
+    value, code = get_did(request)
+    if code != 200:
+        return value, code
+    did = value
 
-    uri = request.args.get('uri', default=None, type=str)
+    uri = get_uri(request)
     if uri is None:
         return "Bad Request", 400
 
     try:
         is_bmed = bookmark_manager.is_bookmarked(did, uri)
         return jsonify({'success': True, "is_bookmarked": is_bmed})
-    except BookmarkError as e:
-        logger.error(e)
+    except BookmarkError:
         return 'Bookmark error', 500
 
 
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.addBookmark', methods=['GET'])
 def add_bookmark():
-    try:
-        did = auth_service.validate_auth(request)
-    except AuthorizationError as e:
-        logger.error(e)
-        return 'Unauthorized', 401
+    value, code = get_did(request)
+    if code != 200:
+        return value, code
+    did = value
 
-    uri = request.args.get('uri', default=None, type=str)
+    uri = get_uri(request)
     if uri is None:
         return "Bad Request", 400
 
     try:
         bookmark_manager.add_bookmark(did, uri)
         return jsonify({'success': True})
-    except BookmarkError as e:
-        logger.error(e)
+    except BookmarkError:
         return 'Bookmark error', 500
 
 
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.removeBookmark', methods=['GET'])
 def remove_bookmark():
-    try:
-        did = auth_service.validate_auth(request)
-    except AuthorizationError as e:
-        logger.error(e)
-        return 'Unauthorized', 401
+    value, code = get_did(request)
+    if code != 200:
+        return value, code
+    did = value
 
-    uri = request.args.get('uri', default=None, type=str)
+    uri = get_uri(request)
     if uri is None:
         return "Bad Request", 400
 
     try:
         bookmark_manager.remove_bookmark(did, uri)
         return jsonify({'success': True})
-    except BookmarkError as e:
-        logger.error(e)
+    except BookmarkError:
         return 'Bookmark error', 500
