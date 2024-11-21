@@ -30,10 +30,10 @@ class AuthService:
         match prefix:
             case 'Bearer':
                 return verify_jwt(jwt, self._resolver).iss
-            case 'DPop':
+            case 'DPoP':
                 return verify_jwt(jwt, self._resolver).sub
             case _:
-                raise AuthorizationError('Unsupported Authorization header prefix')
+                raise AuthorizationError(f'Unsupported Authorization header prefix: {prefix}')
 
 
 auth_service = AuthService()
