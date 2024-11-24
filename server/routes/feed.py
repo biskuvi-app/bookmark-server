@@ -37,7 +37,7 @@ def describe_feed_generator():
 def get_feed_skeleton():
     value, code = get_did(request)
     if code != 200:
-        return jsonify(EMPTY_FEED)
+        return jsonify(EMPTY_FEED), code
     did = value
 
     try:

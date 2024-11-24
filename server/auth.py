@@ -31,7 +31,6 @@ class AuthService:
         match prefix:
             case 'Bearer' | 'DPoP':
                 # payload = verify_jwt(jwt, self._resolver).iss
-
                 # temporary workaround due to error when using verify_jwt
 
                 plain_payload, signing_input, *_, signature = parse_jwt(jwt)
