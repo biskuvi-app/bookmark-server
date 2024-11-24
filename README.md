@@ -42,22 +42,22 @@ Endpoints:
 - /xrpc/app.bsky.feed.getFeedSkeleton
 
 Custom endpoints:  
-  - /xrpc/app.biskuvi.bookmark.isBookmarked  
-    - param:
-      - uri (string): `at://<did:plc:...>/app.bsky.feed.post/<postId>`  
-    - response:
-      - code: `200`
-      - body: `{"is_bookmarked": <boolean>}`  
+- /xrpc/app.biskuvi.bookmark.isBookmarked  
+  - param:
+    - uri (string): `at://<did:plc:...>/app.bsky.feed.post/<postId>`  
+  - response:
+    - code: `200`
+    - body: `{"is_bookmarked": <boolean>}`  
 - /xrpc/app.biskuvi.bookmark.addBookmark  
   - param:
       - uri (string): `at://<did:plc:...>/app.bsky.feed.post/<postId>`  
-    - response:
-      - code: `200`
+  - response:
+    - code: `200`
 - /xrpc/app.biskuvi.bookmark.removeBookmark  
   - param:
       - uri (string): `at://<did:plc:...>/app.bsky.feed.post/<postId>`  
-    - response:
-      - code: `200`  
+  - response:
+    - code: `200`  
 
 ### License
 
