@@ -37,7 +37,7 @@ def add_bookmark():
 
     try:
         bookmark_manager.add_bookmark(did, uri)
-        return "", 201
+        return "", 200
     except BookmarkError:
         return 'Bookmark error', 500
 
@@ -55,6 +55,6 @@ def remove_bookmark():
 
     try:
         bookmark_manager.remove_bookmark(did, uri)
-        return "", 201
+        return "", 200
     except BookmarkError:
         return 'Bookmark error', 500
