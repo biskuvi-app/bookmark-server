@@ -46,4 +46,4 @@ def get_feed_skeleton():
     except ValueError:
         return 'Malformed cursor', 400
 
-    return jsonify(bookmark_manager.get_bookmarks(did, cursor, limit))
+    return jsonify(bookmark_manager.get_bookmarks(did, cursor, limit)), 200

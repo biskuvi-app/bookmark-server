@@ -19,7 +19,7 @@ def is_bookmarked():
 
     try:
         is_bmed = bookmark_manager.is_bookmarked(did, uri)
-        return jsonify({'success': True, "is_bookmarked": is_bmed})
+        return jsonify({"is_bookmarked": is_bmed})
     except BookmarkError:
         return 'Bookmark error', 500
 
@@ -37,7 +37,7 @@ def add_bookmark():
 
     try:
         bookmark_manager.add_bookmark(did, uri)
-        return jsonify({'success': True})
+        return "", 201
     except BookmarkError:
         return 'Bookmark error', 500
 
@@ -55,6 +55,6 @@ def remove_bookmark():
 
     try:
         bookmark_manager.remove_bookmark(did, uri)
-        return jsonify({'success': True})
+        return "", 201
     except BookmarkError:
         return 'Bookmark error', 500
