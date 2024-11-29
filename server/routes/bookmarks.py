@@ -25,7 +25,7 @@ def is_bookmarked():
 
 
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.arePostsBookmarked', methods=['POST'])
-def is_bookmarked():
+def are_posts_bookmarked():
     value, code = get_did(request)
     if code != 200:
         return value, code
