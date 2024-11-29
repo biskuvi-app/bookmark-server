@@ -35,6 +35,13 @@ class BookmarkRepository:
         res = self.cur.execute(sql, (uri,))
         return res.fetchone()[0] > 0
 
+    def are_posts_bookmarked(self, uris: list[str]) -> list[str]:
+        sql = "SELECT uri FROM post WHERE uri IN ({})"
+        placeholders = ','.join(['?' for _ in uris])
+        query = sql.format(placeholders)
+        self.cur.execute(query, uris)
+        return [row[0] for row in self.cur.fetchall()]
+
     def add_bookmark(self, uri: str):
         try:
             self.cur.execute("INSERT OR IGNORE INTO post(uri) VALUES(?)", (uri,))
@@ -107,6 +114,9 @@ class BookmarkManager:
 
     def is_bookmarked(self, did: str, uri: str) -> bool:
         return self._get_repository(did).is_bookmarked(uri)
+
+    def are_posts_bookmarked(self, did: str, uris: list[str]) -> list[str]:
+        return self._get_repository(did).are_posts_bookmarked(uris)
 
     def add_bookmark(self, did: str, uri: str):
         self._get_repository(did).add_bookmark(uri)

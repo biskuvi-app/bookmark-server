@@ -24,6 +24,25 @@ def is_bookmarked():
         return 'Bookmark error', 500
 
 
+@bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.arePostsBookmarked', methods=['POST'])
+def is_bookmarked():
+    value, code = get_did(request)
+    if code != 200:
+        return value, code
+    did = value
+
+    json = request.get_json()
+    uris: list[str] = json["uris"]
+    if uris is None or len(uris) < 1:
+        return "Bad Request", 400
+
+    try:
+        bookmarked_uris = bookmark_manager.are_posts_bookmarked(did, uris)
+        return jsonify({"uris": bookmarked_uris})
+    except BookmarkError:
+        return 'Bookmark error', 500
+
+
 @bookmarks_bp.route('/xrpc/app.biskuvi.bookmark.addBookmark', methods=['GET'])
 def add_bookmark():
     value, code = get_did(request)
