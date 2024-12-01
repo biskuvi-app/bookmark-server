@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from ..database import bookmark_manager, BookmarkError
-from ..util import get_did, get_uri
+from server.database import bookmark_manager, BookmarkError
+from server.util import get_did, get_uri
 
 bookmarks_bp = Blueprint('bookmarks', __name__)
 

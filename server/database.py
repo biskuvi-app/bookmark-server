@@ -1,7 +1,8 @@
 import os
 import sqlite3
 
-BOOKMARKS_DIR = "repo_bookmarks"
+from config import Config
+
 CURSOR_EOF = 'eof'
 EMPTY_FEED = {'cursor': CURSOR_EOF, 'feed': []}
 
@@ -20,7 +21,7 @@ class BookmarkRepository:
         if not db_id.isalnum():
             raise BookmarkError("Invalid non-alphanumeric repo DID")
 
-        self.con = sqlite3.connect(f"{BOOKMARKS_DIR}/{db_id}")
+        self.con = sqlite3.connect(f"{Config.BOOKMARKS_DIR}/{db_id}")
         self.cur = self.con.cursor()
         self._create_table()
 
@@ -98,7 +99,7 @@ class BookmarkRepository:
 
 class BookmarkManager:
     def __init__(self):
-        os.makedirs(BOOKMARKS_DIR, exist_ok=True)
+        os.makedirs(Config.BOOKMARKS_DIR, exist_ok=True)
         self._repositories: dict[str, BookmarkRepository] = {}
 
     def _get_repository(self, did: str) -> BookmarkRepository:

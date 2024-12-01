@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 
-from ..config import Config
-from ..database import bookmark_manager, EMPTY_FEED
-from ..util import get_did
+from config import Config
+from server.database import bookmark_manager, EMPTY_FEED
+from server.util import get_did
 
 feed_bp = Blueprint('feed', __name__)
 

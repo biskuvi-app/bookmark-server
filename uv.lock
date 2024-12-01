@@ -65,7 +65,6 @@ dependencies = [
     { name = "atproto" },
     { name = "flask" },
     { name = "flask-cors" },
-    { name = "peewee" },
     { name = "python-dotenv" },
 ]
 
@@ -74,7 +73,6 @@ requires-dist = [
     { name = "atproto", specifier = ">=0.0.55" },
     { name = "flask", specifier = ">=3.0.3" },
     { name = "flask-cors", specifier = ">=5.0.0" },
-    { name = "peewee", specifier = ">=3.17.8" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
 ]
 
@@ -436,12 +434,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/82/78/fedb03c7d5380df2427038ec8d973587e90561b2d90cd472ce9254cf348b/MarkupSafe-3.0.2-cp313-cp313t-win32.whl", hash = "sha256:ba8062ed2cf21c07a9e295d5b8a2a5ce678b913b45fdf68c32d95d6c1291e0b6", size = 15208 },
     { url = "https://files.pythonhosted.org/packages/4f/65/6079a46068dfceaeabb5dcad6d674f5f5c61a6fa5673746f42a9f4c233b3/MarkupSafe-3.0.2-cp313-cp313t-win_amd64.whl", hash = "sha256:e444a31f8db13eb18ada366ab3cf45fd4b31e4db1236a4448f68778c1d1a5a2f", size = 15739 },
 ]
-
-[[package]]
-name = "peewee"
-version = "3.17.8"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b4/dc/832bcf4ea5ee2ebc4ea42ef36e44a451de5d80f8b9858bf2066e30738c67/peewee-3.17.8.tar.gz", hash = "sha256:ce1d05db3438830b989a1b9d0d0aa4e7f6134d5f6fd57686eeaa26a3e6485a8c", size = 948249 }
 
 [[package]]
 name = "pycparser"
