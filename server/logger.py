@@ -4,7 +4,7 @@ from datetime import datetime
 
 from config import Config
 
-os.makedirs(Config.BOOKMARKS_DIR, exist_ok=True)
+os.makedirs(Config.LOGS_DIR, exist_ok=True)
 
 
 class Logger:
@@ -14,8 +14,8 @@ class Logger:
         now = datetime.now()
         file = now.strftime('%y%m%d')
         pref = now.strftime('%H%M%S')
+        print(f"{pref} {message}", file=f"{Config.LOGS_DIR}/{file}.log")
         self._logger.error(message)
-        print(f"{pref} {message}", file=f"{Config.BOOKMARKS_DIR}/{file}.log")
 
 
 logger = Logger()
