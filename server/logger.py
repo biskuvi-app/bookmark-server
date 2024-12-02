@@ -16,3 +16,6 @@ class Logger:
         pref = now.strftime('%H%M%S')
         self._logger.error(message)
         print(f"{pref} {message}", file=f"{Config.BOOKMARKS_DIR}/{file}.log")
+
+
+logger = Logger()
