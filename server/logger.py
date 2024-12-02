@@ -14,7 +14,8 @@ class Logger:
         now = datetime.now()
         file = now.strftime('%y%m%d')
         pref = now.strftime('%H%M%S')
-        print(f"{pref} {message}", file=f"{Config.LOGS_DIR}/{file}.log")
+        with open(f"{Config.LOGS_DIR}/{file}.log", "a") as f:
+            f.write(f"{pref} {message}\n")
         self._logger.error(message)
 
 
