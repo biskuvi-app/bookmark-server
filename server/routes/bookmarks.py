@@ -81,4 +81,4 @@ def remove_bookmark():
         return "", 200
     except BookmarkError as e:
         logger.error(e)
-        return f'Bookmark error: {e}', 500
+        return f'Bookmark error', 500
