@@ -52,7 +52,7 @@ class BookmarkRepository:
 
     def remove_bookmark(self, uri: str):
         try:
-            self.cur.execute("DELETE FROM post WHERE uri = ? LIMIT 1", (uri,))
+            self.cur.execute("DELETE FROM post WHERE uri = ?", (uri,))
             self.con.commit()
         except sqlite3.Error as e:
             raise BookmarkError(f"Failed to remove bookmark: {e}")
