@@ -15,9 +15,9 @@ class PublishFeedConfig:
     PASSWORD: str = '<app-password>'
     # server
     HOSTNAME: str = 'bookmarks.bskv.site'
-    SERVICE_DID: str = ''
+    SERVICE_DID: str = 'did:plc:qvmvynssslo5yhstrnc2cwv6'
     # feed info
     RECORD_NAME: str = 'bookmarks'
     DISPLAY_NAME: str = 'Bookmarks'
     DESCRIPTION: str = 'Bookmark feed'
-    AVATAR_PATH: str = './assets/biscuit-flat.png'
+    AVATAR_PATH: str = './assets/logo.png'
