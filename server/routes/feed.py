@@ -11,7 +11,7 @@ feed_bp = Blueprint('feed', __name__)
 def did_json():
     return jsonify({
         '@context': ['https://www.w3.org/ns/did/v1'],
-        'id': Config.SERVICE_DID,
+        'id': f"did:web:{Config.HOSTNAME}",
         'service': [
             {
                 'id': '#bsky_fg',
