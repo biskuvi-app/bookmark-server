@@ -7,6 +7,11 @@ from server.util import get_did
 feed_bp = Blueprint('feed', __name__)
 
 
+@feed_bp.route('/.well-known/atproto-did', methods=['GET'])
+def atproto_did():
+    return Config.SERVICE_DID
+
+
 @feed_bp.route('/.well-known/did.json', methods=['GET'])
 def did_json():
     return jsonify({

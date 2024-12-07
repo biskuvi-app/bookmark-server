@@ -21,7 +21,7 @@ def unpublish():
 
         print(dir(client.com.atproto.repo))
 
-        response = client.com.atproto.repo.list_records(
+        response = client.com.atproto.repo.delete_record(
             data={
                 'repo': client.me.did,
                 'collection': models.ids.AppBskyFeedGenerator,
@@ -29,7 +29,7 @@ def unpublish():
             }
         )
 
-        print(response.records)
+        print(response)
 
 
 if __name__ == '__main__':
