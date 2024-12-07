@@ -7,14 +7,14 @@ well_known_bp = Blueprint('well-known', __name__)
 
 @well_known_bp.route('/.well-known/atproto-did', methods=['GET'])
 def atproto_did():
-    return config.SERVICE_DID
+    return config.SERVICE_DID_PLC
 
 
 @well_known_bp.route('/.well-known/did.json', methods=['GET'])
 def did_json():
     return jsonify({
         '@context': ['https://www.w3.org/ns/did/v1'],
-        'id': config.SERVICE_DID,
+        'id': config.SERVICE_DID_WEB,
         'service': [
             {
                 'id': '#bsky_fg',

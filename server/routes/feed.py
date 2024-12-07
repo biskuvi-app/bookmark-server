@@ -12,7 +12,7 @@ def describe_feed_generator():
     return jsonify({
         'encoding': 'application/json',
         'body': {
-            'did': config.SERVICE_DID,
+            'did': config.SERVICE_DID_WEB,
             'feeds': [{'uri': config.BOOKMARKS_URI}]
         }
     })
