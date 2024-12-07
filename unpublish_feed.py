@@ -1,36 +1,22 @@
-#!/usr/bin/env python3
-# YOU MUST INSTALL ATPROTO SDK
-# pip3 install atproto
-
+# install atproto first
 from atproto import Client, models
 
-from config import PublishFeedConfig as Config
+# Edit this section
 
+HANDLE: str = 'bookmarks.bskv.site'
+PASSWORD: str = '<app-password>'
+RECORD_NAME: str = 'bookmarks'
 
-def unpublish():
-    client = Client()
-    client.login(Config.HANDLE, Config.PASSWORD)
+# Once you are done editing the values above, run this script.
 
-    def main():
-        client = Client()
-        client.login(Config.HANDLE, Config.PASSWORD)
+at_client = Client()
+at_client.login(HANDLE, PASSWORD)
 
-        feed_did = Config.SERVICE_DID
-        if not feed_did:
-            feed_did = f'did:web:{Config.HOSTNAME}'
-
-        print(dir(client.com.atproto.repo))
-
-        response = client.com.atproto.repo.delete_record(
-            data={
-                'repo': client.me.did,
-                'collection': models.ids.AppBskyFeedGenerator,
-                'rkey': Config.RECORD_NAME
-            }
-        )
-
-        print(response)
-
-
-if __name__ == '__main__':
-    unpublish()
+response = at_client.com.atproto.repo.delete_record(
+    data={
+        'repo': at_client.me.did,
+        'collection': models.ids.AppBskyFeedGenerator,
+        'rkey': RECORD_NAME
+    }
+)
+print(response)

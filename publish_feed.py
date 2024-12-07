@@ -1,40 +1,42 @@
-#!/usr/bin/env python3
-# YOU MUST INSTALL ATPROTO SDK
-# pip3 install atproto
-
+# install atproto first
 from atproto import Client, models
 
-from config import PublishFeedConfig as Config
+# Edit this section. Go to README.md for details
+
+HANDLE: str = 'bookmarks.bskv.site'
+PASSWORD: str = '<app-password>'
+RECORD_NAME: str = 'bookmarks'
+DISPLAY_NAME: str = 'Bookmarks'
+DESCRIPTION: str = 'Bookmark feed'
+ICON: str = './assets/logo.png'
+
+# Once you are done editing the values above, run this script.
+
+client = Client()
+client.login(HANDLE, PASSWORD)
 
 
-def publish():
-    client = Client()
-    client.login(Config.HANDLE, Config.PASSWORD)
-
-    feed_did = Config.SERVICE_DID or f'did:web:{Config.HOSTNAME}'
-
-    avatar_blob = None
-    if Config.AVATAR_PATH:
-        with open(Config.AVATAR_PATH, 'rb') as f:
+def feed_icon():
+    if ICON:
+        with open(ICON, 'rb') as f:
             avatar_data = f.read()
-            avatar_blob = client.upload_blob(avatar_data).blob
-
-    response = client.com.atproto.repo.put_record(models.ComAtprotoRepoPutRecord.Data(
-        repo=client.me.did,
-        collection=models.ids.AppBskyFeedGenerator,
-        rkey=Config.RECORD_NAME,
-        record=models.AppBskyFeedGenerator.Record(
-            did=feed_did,
-            display_name=Config.DISPLAY_NAME,
-            description=Config.DESCRIPTION,
-            avatar=avatar_blob,
-            created_at=client.get_current_time_iso(),
-        )
-    ))
-
-    print('Successfully published!')
-    print('Feed URI (put in "BOOKMARKS_URI"):', response.uri)
+            return client.upload_blob(avatar_data).blob
+    else:
+        return None
 
 
-if __name__ == '__main__':
-    publish()
+response = client.com.atproto.repo.put_record(models.ComAtprotoRepoPutRecord.Data(
+    repo=client.me.did,
+    collection=models.ids.AppBskyFeedGenerator,
+    rkey=RECORD_NAME,
+    record=models.AppBskyFeedGenerator.Record(
+        did=client.me.did,
+        display_name=DISPLAY_NAME,
+        description=DESCRIPTION,
+        avatar=feed_icon(),
+        created_at=client.get_current_time_iso(),
+    )
+))
+
+print('Successfully published!')
+print('Feed URI (put in "BOOKMARKS_URI"):', response.uri)
